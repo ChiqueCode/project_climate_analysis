@@ -80,15 +80,17 @@ filter(Measurement.date >= start_date).all()
     return jsonify(trip_one_day)
 
 #When given the start and the end date, calculate the #`TMIN`, `TAVG`, and `TMAX` for dates between the #start and end date inclusive.
-@app.route("/api/v1.0/<start>/<end>")
-def all_days(start_date, end_date):
+@app.route("/api/v1.0/<start_date>/<end_date>")
+def all_days(start_date=None, end_date=None):
     all_days = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
 filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
-
-    all_days = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
-filter(Measurement.date.between(start_date, end_date)).all()
     trip_all_days = list(np.ravel(all_days))
     return jsonify(trip_all_days)
+
+#     all_days = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
+# filter(Measurement.date.between(start_date, end_date)).all()
+#     trip_all_days = list(np.ravel(all_days))
+#     return jsonify(trip_all_days)
 
 if __name__ == '__main__':
     app.run(debug=True)
