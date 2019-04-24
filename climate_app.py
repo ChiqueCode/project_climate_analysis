@@ -63,8 +63,8 @@ def station():
             break
     return jsonify(stations)  
 
-# Query for the dates and temperature observations from a year from the last data point.
-# Return a JSON list of Temperature Observations (tobs) for the previous year.
+Query for the dates and temperature observations from a year from the last data point.
+Return a JSON list of Temperature Observations (tobs) for the previous year.
 @app.route("/api/v1.0/tobs")  
 def tobs():
     results = session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= "2016-08-23").filter(Measurement.date <= "2017-08-23").all()
@@ -75,23 +75,17 @@ def tobs():
 @app.route("/api/v1.0/<start_date>")
 def one_day(start_date):
     one_day = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
-filter(Measurement.date >= start_date).all()
+        filter(Measurement.date >= start_date).all()
     trip_one_day = list(np.ravel(one_day))
     return jsonify(trip_one_day)
 
 #When given the start and the end date, calculate the #`TMIN`, `TAVG`, and `TMAX` for dates between the #start and end date inclusive.
 @app.route("/api/v1.0/<start_date>/<end_date>")
-def all_days(start_date=None, end_date=None):
+def all_days(start_date, end_date):
     all_days = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
-filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
+        filter(Measurement.date >= start_date).filter(Measurement.date <= end_date).all()
     trip_all_days = list(np.ravel(all_days))
     return jsonify(trip_all_days)
 
-#     all_days = session.query(func.min(Measurement.tobs),func.avg(Measurement.tobs),func.max(Measurement.tobs)).\
-# filter(Measurement.date.between(start_date, end_date)).all()
-#     trip_all_days = list(np.ravel(all_days))
-#     return jsonify(trip_all_days)
-
 if __name__ == '__main__':
     app.run(debug=True)
-
