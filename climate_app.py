@@ -63,8 +63,8 @@ def station():
             break
     return jsonify(stations)  
 
-Query for the dates and temperature observations from a year from the last data point.
-Return a JSON list of Temperature Observations (tobs) for the previous year.
+# Query for the dates and temperature observations from a year from the last data point.
+# Return a JSON list of Temperature Observations (tobs) for the previous year.
 @app.route("/api/v1.0/tobs")  
 def tobs():
     results = session.query(Measurement.date, Measurement.tobs).filter(Measurement.date >= "2016-08-23").filter(Measurement.date <= "2017-08-23").all()
